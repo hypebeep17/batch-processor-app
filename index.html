@@ -1,0 +1,378 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Local File Batch Processor&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Custom scrollbar for log and results */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#log-container::-webkit-scrollbar, .table-container::-webkit-scrollbar {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#log-container::-webkit-scrollbar-track, .table-container::-webkit-scrollbar-track {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #f1f5f9;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#log-container::-webkit-scrollbar-thumb, .table-container::-webkit-scrollbar-thumb {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #94a3b8;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#log-container::-webkit-scrollbar-thumb:hover, .table-container::-webkit-scrollbar-thumb:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #64748b;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.table-container {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>overflow: auto;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="bg-gray-100 text-gray-800"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container mx-auto p-4 md:p-8 max-w-7xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;header class="bg-white shadow-md rounded-xl p-6 mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-3xl font-bold text-gray-900"&gt;Local File Batch Processor&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-gray-600 mt-2"&gt;Upload an Excel file to process orders and display the generated batches directly on this page.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;main class="bg-white shadow-md rounded-xl p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Step 1: File Upload --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-2xl font-semibold border-b pb-2 mb-4"&gt;Step 1: Upload Your File&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="file-input" class="block text-sm font-medium text-gray-700"&gt;Select Excel File (.xls, .xlsx)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="file" id="file-input" accept=".xls,.xlsx" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="start_processing" class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Process File</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Step 2: Logging Output --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="log-section" class="hidden mt-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-2xl font-semibold border-b pb-2 mb-4"&gt;Processing Log&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="log-container" class="bg-gray-50 p-4 rounded-lg border border-gray-200 h-64 overflow-y-auto text-sm font-mono"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-500"&gt;Logs will appear here...&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">             </span>&lt;!-- Step 3: Results Display --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="results-section" class="hidden mt-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-2xl font-semibold border-b pb-2 mb-4"&gt;Results&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>&lt;div id="overall-summary-container"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>&lt;div id="detailed-batches-container" class="mt-6"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;footer class="text-center mt-8 text-sm text-gray-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Powered by modern web technologies.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/footer&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const startProcessingButton = document.getElementById('start_processing');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const fileInput = document.getElementById('file-input');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const logSection = document.getElementById('log-section');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const logContainer = document.getElementById('log-container');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const resultsSection = document.getElementById('results-section');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const overallSummaryContainer = document.getElementById('overall-summary-container');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const detailedBatchesContainer = document.getElementById('detailed-batches-container');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- CORE PROCESSING LOGIC ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>startProcessingButton.onclick = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const file = fileInput.files[0];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!file) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>alert("Please select a file first.");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>startProcessingButton.disabled = true;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>startProcessingButton.textContent = 'Processing...';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Show and clear previous results</p>
+<p class="p1"><span class="Apple-converted-space">            </span>logSection.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>resultsSection.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>logContainer.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>overallSummaryContainer.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>detailedBatchesContainer.innerHTML = '';</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const reader = new FileReader();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>reader.onload = (event) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const data = new Uint8Array(event.target.result);</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log('--- 1. Data Reading and UPC Extraction ---');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const df = readAndParseExcel(data);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log('\n--- 2. Order Aggregation and Filtering ---');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const filteredGroups = aggregateAndFilter(df);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log('\n--- 3. Batching Logic ---');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const batches = createBatches(filteredGroups);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (batches.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>log("No batches were created based on the criteria.", 'warning');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>resetStartButton();</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log(`Total batches created: ${batches.length}`);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log('\n--- 4. Displaying Results ---');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>displayResults(batches);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>resultsSection.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log('\n🎉 Processing complete.', 'success');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log(`❌ An unexpected error occurred: ${error.message}`, 'error');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>console.error(error);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} finally {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>resetStartButton();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>reader.onerror = (error) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>log(`❌ File could not be read: ${error}`, 'error');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>resetStartButton();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>reader.readAsArrayBuffer(file);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- HELPER FUNCTIONS ---</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function log(message, type = 'info') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const p = document.createElement('p');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let colorClass = 'text-gray-800';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'error') colorClass = 'text-red-600 font-semibold';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'success') colorClass = 'text-green-600 font-semibold';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'warning') colorClass = 'text-yellow-600 font-semibold';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>p.className = `${colorClass} whitespace-pre-wrap`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>p.textContent = message;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>logContainer.appendChild(p);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function resetStartButton() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>startProcessingButton.disabled = false;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>startProcessingButton.textContent = 'Process File';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">       </span>function readAndParseExcel(data) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>log('Parsing Excel file...');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const workbook = XLSX.read(data, { type: 'array' });</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const sheetName = workbook.SheetNames[0];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const worksheet = workbook.Sheets[sheetName];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const json_data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (json_data.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>throw new Error("The Excel file is empty.");</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const headers = json_data[0].map(h =&gt; String(h));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const upcIndex = headers.findIndex(h =&gt; String(h).toUpperCase() === 'UPC');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (upcIndex === -1) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>throw new Error("Input file must contain a column with the header 'UPC'.");</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>log(`Found 'UPC' header at column index ${upcIndex}.`);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const rows = json_data.slice(1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const df = rows.map(row =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Order_Number: row[0],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>UPC_Info: row[upcIndex]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>})).filter(r =&gt; r.Order_Number &amp;&amp; r.UPC_Info);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>df.forEach(row =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>row.UPC = String(row.UPC_Info).split('*')[0];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>log(`✅ Successfully read and parsed ${df.length} rows.`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return df;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function aggregateAndFilter(df) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const groups = new Map();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>df.forEach(row =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const lowerCaseUpc = String(row.UPC).toLowerCase();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (!groups.has(lowerCaseUpc)) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>groups.set(lowerCaseUpc, {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>originalUPC: row.UPC,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>orders: []</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>groups.get(lowerCaseUpc).orders.push([row.Order_Number, row.UPC_Info]);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const upcGroups = Array.from(groups.entries()).map(([_, val]) =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">                </span>UPC: val.originalUPC,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Orders: val.orders,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Count: val.orders.length</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const filtered = upcGroups.filter(g =&gt; g.Count &gt;= 3);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>log(`📊 Found ${filtered.length} UPCs (case-insensitive) with 3 or more orders.`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return filtered;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function createBatches(filteredGroups) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const BATCH_SIZE_LIMIT = 500;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const batches = [];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const large_upcs = filteredGroups.filter(g =&gt; g.Count &gt; BATCH_SIZE_LIMIT);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>large_upcs.forEach(group =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>batches.push({</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>summary: [[group.UPC, group.Count]],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>orders: group.Orders</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>log(`📦 Created a dedicated batch for UPC ${group.UPC} with ${group.Count} orders.`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const small_upcs = filteredGroups</p>
+<p class="p1"><span class="Apple-converted-space">                </span>.filter(g =&gt; g.Count &lt;= BATCH_SIZE_LIMIT)</p>
+<p class="p1"><span class="Apple-converted-space">                </span>.sort((a, b) =&gt; b.Count - a.Count);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (small_upcs.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>let current_batch_orders = [], current_batch_summary = [], current_batch_size = 0;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>small_upcs.forEach(group =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (current_batch_size + group.Count &gt; BATCH_SIZE_LIMIT &amp;&amp; current_batch_size &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>batches.push({ summary: current_batch_summary, orders: current_batch_orders });</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>log(`👍 Finalized a batch with ${current_batch_orders.length} orders.`);</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>current_batch_orders = [], current_batch_summary = [], current_batch_size = 0;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>current_batch_orders.push(...group.Orders);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>current_batch_summary.push([group.UPC, group.Count]);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>current_batch_size += group.Count;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (current_batch_orders.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>batches.push({ summary: current_batch_summary, orders: current_batch_orders });</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log(`👍 Finalized the last batch with ${current_batch_orders.length} orders.`);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return batches;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function displayResults(batches) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 1. Create Overall Summary</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const overallSummaryData = [['Batch Name', 'Total Orders', 'Unique UPCs']];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>batches.forEach((batch, i) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const total_orders = batch.orders.length;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const unique_upcs = batch.summary.length;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const batch_name = `Batch_${i + 1}_${total_orders + unique_upcs + 1}`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>overallSummaryData.push([batch_name, total_orders, unique_upcs]);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const totalOrdersSum = overallSummaryData.slice(1).reduce((sum, row) =&gt; sum + row[1], 0);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>overallSummaryData.push(['&lt;strong&gt;Grand Total&lt;/strong&gt;', `&lt;strong&gt;${totalOrdersSum}&lt;/strong&gt;`, '']);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const overallSummaryTable = createTable(</p>
+<p class="p1"><span class="Apple-converted-space">                </span>'Overall Summary',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>['Batch Name', 'Total Orders', 'Unique UPCs'],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>overallSummaryData.slice(1) // remove header row for data</p>
+<p class="p1"><span class="Apple-converted-space">            </span>);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>overallSummaryContainer.appendChild(overallSummaryTable);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 2. Create Detailed Batch Views</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const batchDetailsTitle = document.createElement('h3');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>batchDetailsTitle.className = 'text-xl font-semibold mt-8 mb-4';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>batchDetailsTitle.textContent = 'Detailed Batch View';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>detailedBatchesContainer.appendChild(batchDetailsTitle);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>batches.forEach((batch, i) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const batch_name = overallSummaryData[i + 1][0];</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const batchContainer = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>batchContainer.className = 'mb-8 p-4 border rounded-lg bg-gray-50';</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const batchTitle = document.createElement('h4');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>batchTitle.className = 'text-lg font-semibold mb-4';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>batchTitle.textContent = batch_name;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>batchContainer.appendChild(batchTitle);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const gridContainer = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>gridContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Batch Summary Table</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const total_orders = batch.orders.length;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const summaryData = [...batch.summary, [`&lt;strong&gt;Total&lt;/strong&gt;`, `&lt;strong&gt;${total_orders}&lt;/strong&gt;`]];</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const summaryTable = createTable('UPCs in Batch', ['UPC', 'Order Count'], summaryData);</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Orders Table</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const ordersTable = createTable('Orders in Batch', ['Order Number', 'UPC Info (Raw)'], batch.orders);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>gridContainer.appendChild(summaryTable);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>gridContainer.appendChild(ordersTable);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>batchContainer.appendChild(gridContainer);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>detailedBatchesContainer.appendChild(batchContainer);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>log('✅ Successfully rendered results on the page.');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function createTable(title, headers, data) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const container = document.createElement('div');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const tableTitle = document.createElement('h5');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>tableTitle.className = 'font-semibold mb-2';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>tableTitle.textContent = title;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>container.appendChild(tableTitle);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const tableContainer = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>tableContainer.className = 'table-container border rounded-md';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const table = document.createElement('table');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>table.className = 'min-w-full divide-y divide-gray-200';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const thead = document.createElement('thead');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>thead.className = 'bg-gray-100';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const headerRow = document.createElement('tr');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>headers.forEach(headerText =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const th = document.createElement('th');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>th.className = 'px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>th.textContent = headerText;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>headerRow.appendChild(th);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>thead.appendChild(headerRow);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>table.appendChild(thead);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const tbody = document.createElement('tbody');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>tbody.className = 'bg-white divide-y divide-gray-200';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>data.forEach(rowData =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const tr = document.createElement('tr');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>rowData.forEach(cellData =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const td = document.createElement('td');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>td.className = 'px-4 py-2 whitespace-nowrap text-sm text-gray-700';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>td.innerHTML = cellData; // Use innerHTML to render bold tags</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>tr.appendChild(td);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>tbody.appendChild(tr);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>table.appendChild(tbody);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>tableContainer.appendChild(table);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>container.appendChild(tableContainer);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return container;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
